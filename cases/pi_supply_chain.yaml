@@ -1,0 +1,33 @@
+# 供应链风险
+
+PI-029:
+  cat: 供应链风险
+  sub: 推理引擎/依赖组件
+  sub3: 未修复的推理引擎漏洞利用
+  pre: 目标系统使用已知版本的推理引擎（vLLM、TGI、Ollama）；可访问版本信息。
+  steps:
+    - 识别目标系统使用的推理引擎及版本；
+    - 查询该版本是否对应已知 CVE；
+    - 构造针对该 CVE 的恶意请求；
+    - 观察是否触发信息泄露或代码执行。
+  expect: 推理引擎版本无已知未修复高危漏洞。
+  level: 高
+  defense: 1、建立版本清单与 CVE 监控；2、定期升级；3、推理引擎以最小权限运行；4、关闭调试模式。
+  owasp: LLM03
+  note: OWASP LLM03 供应链风险
+
+PI-030:
+  cat: 供应链风险
+  sub: Agent 扩展组件
+  sub3: 恶意插件/MCP 服务器注入
+  pre: 目标 AI Agent 集成了外部 MCP 服务器、插件或扩展组件；可获取 manifest。
+  steps:
+    - 列出 Agent 使用的全部外部组件；
+    - 静态检查组件内 prompt、description、tool definition 是否包含指令绕过或数据外传；
+    - 搜索代码中是否将用户输入、系统提示、API key 发送到外部服务器；
+    - 在隔离环境加载组件，观察其行为是否符合声明。
+  expect: 所有 Agent 扩展组件经过安全审查。
+  level: 严重
+  defense: 1、静态分析组件 prompt/tool definition 和外部通信；2、隔离测试后再接入生产；3、限制组件权限；4、组件来源可信度管理。
+  owasp: LLM03
+  note: MITRE ATLAS AML.T0010.005
